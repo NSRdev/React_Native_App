@@ -6,6 +6,8 @@ import DishDetail from './DishdetailComponent';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createAppContainer } from 'react-navigation';
 import { createDrawerNavigator } from 'react-navigation-drawer';
+import Contact from './ContactComponent';
+import About from './AboutComponent';
 
 
 const MenuNavigator = createStackNavigator({
@@ -17,6 +19,14 @@ const HomeNavigator = createStackNavigator({
     Home: { screen: Home }
 });
 
+const ContactNavigator = createStackNavigator({
+    Contact: { screen: Contact }
+});
+
+const AboutNavigator = createStackNavigator({
+    About: { screen: About }
+});
+
 const MainNavigator = createDrawerNavigator({
     Home: {
         screen: HomeNavigator,
@@ -25,11 +35,25 @@ const MainNavigator = createDrawerNavigator({
             drawerLabel: 'Home '
         }
     },
+    About: { 
+        screen: AboutNavigator,
+        navigationOptions: {
+            title: 'About Us',
+            drawerLabel: 'About Us  '
+        }
+    },
     Menu: { 
         screen: MenuNavigator,
         navigationOptions: {
             title: 'Menu',
             drawerLabel: 'Menu '
+        }
+    },
+    Contact: { 
+        screen: ContactNavigator,
+        navigationOptions: {
+            title: 'Contact Us',
+            drawerLabel: 'Contact Us '
         }
     }
 });

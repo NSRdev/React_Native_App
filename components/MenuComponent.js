@@ -22,7 +22,7 @@ class Menu extends Component {
 
         const renderMenuItem = ({item, index}) => {
             return(
-                <ListItem 
+                <ListItem
                     key={index} 
                     onPress={() => navigate('DishDetail', { dishId: item.id })}>
                     <ListItem.Content>
