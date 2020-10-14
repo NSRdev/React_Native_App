@@ -13,7 +13,7 @@ function RenderDish(props) {
                 <Card.FeaturedTitle style={{color: '#000'}}>{dish.name}</Card.FeaturedTitle>
                 <Card.Image source={require('./images/uthappizza.png')} />
                 <Text style={{margin: 10}}>{dish.description}</Text>
-                <Icon raised reverse 
+                <Icon raised reverse
                     name={ props.favorite ? 'heart' : 'heart-o'} 
                     type='font-awesome' 
                     color='#F50' 
