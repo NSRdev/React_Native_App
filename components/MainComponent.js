@@ -1,61 +1,170 @@
 import React, { Component } from 'react';
-import { View, Platform } from 'react-native';
+import { View, Platform, Image, StyleSheet, ScrollView, Text } from 'react-native';
+import { createStackNavigator } from 'react-navigation-stack';
+import { createAppContainer, SafeAreaView } from 'react-navigation';
+import { createDrawerNavigator, DrawerItems } from 'react-navigation-drawer';
+import { StatusBar } from 'expo-status-bar';
+import { Icon } from 'react-native-elements';
 import Menu from './MenuComponent';
 import Home from './HomeComponent';
 import DishDetail from './DishdetailComponent';
-import { createStackNavigator } from 'react-navigation-stack';
-import { createAppContainer } from 'react-navigation';
-import { createDrawerNavigator } from 'react-navigation-drawer';
 import Contact from './ContactComponent';
 import About from './AboutComponent';
 
 
 const MenuNavigator = createStackNavigator({
-    Menu: { screen: Menu },
+    Menu: { screen: Menu,
+        navigationOptions: ({ navigation }) => ({
+            headerLeft: () => <Icon name="menu" size={24}
+                color='white'
+                onPress={() => navigation.toggleDrawer()} />
+        }) },
     DishDetail: { screen: DishDetail }
+}, {
+    defaultNavigationOptions:{
+        headerStyle:{
+            backgroundColor:"#03A9F4"
+        },
+        headerTintColor:"#fff",
+        headerTitleColor:{
+            color:"#fff"
+        }
+    }
 });
 
 const HomeNavigator = createStackNavigator({
     Home: { screen: Home }
+}, {
+    defaultNavigationOptions: ({ navigation }) => ({
+        headerStyle:{
+            backgroundColor:"#03A9F4"
+        },
+        headerTintColor:"#fff",
+        headerTitleColor:{
+            color:"#fff"
+        },
+        headerLeft: () => <Icon name="menu" size={24}
+                color='white'
+                onPress={() => navigation.toggleDrawer()} />
+    })
 });
 
 const ContactNavigator = createStackNavigator({
     Contact: { screen: Contact }
+}, {
+    defaultNavigationOptions: ({ navigation }) => ({
+        headerStyle:{
+            backgroundColor:"#03A9F4"
+        },
+        headerTintColor:"#fff",
+        headerTitleColor:{
+            color:"#fff"
+        },
+        headerLeft: () => <Icon name="menu" size={24}
+                color='white'
+                onPress={() => navigation.toggleDrawer()} />
+    })
 });
 
 const AboutNavigator = createStackNavigator({
     About: { screen: About }
+}, {
+    defaultNavigationOptions: ({ navigation }) => ({
+        headerStyle:{
+            backgroundColor:"#03A9F4"
+        },
+        headerTintColor:"#fff",
+        headerTitleColor:{
+            color:"#fff"
+        },
+        headerLeft: () => <Icon name="menu" size={24}
+                color='white'
+                onPress={() => navigation.toggleDrawer()} />
+    })
 });
+
+const CustomDrawerContentComponent = (props) => (
+    <ScrollView>
+        <SafeAreaView style={StyleSheet.container} forceInset={{ top: 'always', horizontal: 'never' }}>
+            <View style={styles.drawerHeader}>
+                <View style={{flex: 1}}>
+                    <Image source={require('./images/logo.png')} style={styles.drawerImage} />
+                </View>
+                <View style={{flex: 2}}>
+                    <Text style={styles.drawerHeaderText}>Ristorante Confusion</Text>
+                </View>
+            </View>
+            <DrawerItems {...props} />
+        </SafeAreaView>
+    </ScrollView>
+);
 
 const MainNavigator = createDrawerNavigator({
     Home: {
         screen: HomeNavigator,
         navigationOptions: {
             title: 'Home',
-            drawerLabel: 'Home '
+            drawerLabel: 'Home ',
+            drawerIcon: ({ tintColor }) => (
+                <Icon 
+                    name='home'
+                    type='font-awesome'
+                    size={24}
+                    color={tintColor}
+                />
+            )
         }
     },
     About: { 
         screen: AboutNavigator,
         navigationOptions: {
             title: 'About Us',
-            drawerLabel: 'About Us  '
+            drawerLabel: 'About Us  ',
+            drawerIcon: ({ tintColor }) => (
+                <Icon 
+                    name='info-circle'
+                    type='font-awesome'
+                    size={24}
+                    color={tintColor}
+                />
+            )
+
         }
     },
     Menu: { 
         screen: MenuNavigator,
         navigationOptions: {
             title: 'Menu',
-            drawerLabel: 'Menu '
+            drawerLabel: 'Menu ',
+            drawerIcon: ({ tintColor }) => (
+                <Icon 
+                    name='list'
+                    type='font-awesome'
+                    size={24}
+                    color={tintColor}
+                />
+            )
         }
     },
     Contact: { 
         screen: ContactNavigator,
         navigationOptions: {
             title: 'Contact Us',
-            drawerLabel: 'Contact Us '
+            drawerLabel: 'Contact Us ',
+            drawerIcon: ({ tintColor }) => (
+                <Icon 
+                    name='address-card'
+                    type='font-awesome'
+                    size={22}
+                    color={tintColor}
+                />
+            )
         }
     }
+}, {
+    drawerBackgroundColor: '#B3E5FC',
+    drawerPosition: 'left',
+    contentComponent: CustomDrawerContentComponent
 });
 
 const App = createAppContainer(MainNavigator);
@@ -66,10 +175,36 @@ class Main extends Component {
         return(
             <View style={{ flex: 1, paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight}}>
                 <App />
+                <StatusBar backgroundColor='#03A9F4' barStyle="light-content" />
             </View>
         );
     }
 }
+
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1
+    },
+    drawerHeader: {
+        backgroundColor: '#03A9F4',
+        height: 140,
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: 1,
+        flexDirection: 'row'
+    },
+    drawerHeaderText: {
+        color: 'white',
+        fontSize: 24,
+        fontWeight: 'bold'
+    },
+    drawerImage: {
+        margin: 10,
+        width: 80,
+        height: 60
+    }
+})
 
 
 export default Main;

@@ -24,10 +24,10 @@ class Menu extends Component {
             return(
                 <ListItem
                     key={index} 
-                    onPress={() => navigate('DishDetail', { dishId: item.id })}>
+                    onPress={() => navigate('DishDetail', { dishId: item.id })}
+                    leftAvatar={{ source:require('./images/uthappizza.png') }} >
                     <ListItem.Content>
                         <ListItem.Title>{item.name}</ListItem.Title>
-                        <Avatar rounded source={require('./images/uthappizza.png') } />
                         <ListItem.Subtitle>{item.description}</ListItem.Subtitle>
                     </ListItem.Content>
                 </ListItem>

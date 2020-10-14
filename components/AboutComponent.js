@@ -7,9 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 function History() {
     return(
-        <Card>
-            <Card.Title>Our History</Card.Title>
-            <Card.Divider/>
+        <Card title='Our History'>
             <Text>Started in 2010, Ristorante con Fusion quickly established itself as a culinary icon par excellence in Hong Kong. 
                 With its unique brand of world fusion cuisine that can be found nowhere else, it enjoys patronage from the A-list 
                 clientele in Hong Kong. Featuring four of the best three-star Michelin chefs in the world, you never know what will 
@@ -24,10 +22,9 @@ function History() {
 function Leaders(props) {
     const renderLeaderItem = ({item, index}) => {
         return(
-            <ListItem key={index}>
+            <ListItem key={index} leftAvatar={{ source:require('./images/alberto.png') }}>
                 <ListItem.Content>
-                    <ListItem.Title>{item.name}</ListItem.Title>
-                    <Avatar rounded source={require('./images/alberto.png') } />
+                    <ListItem.Title style={{fontWeight: 'bold'}}>{item.name}</ListItem.Title>
                     <Text>{item.description}</Text>
                 </ListItem.Content>
             </ListItem>
@@ -35,9 +32,7 @@ function Leaders(props) {
     }
 
     return(
-        <Card>
-            <Card.Title>Coorporate Leadership</Card.Title>
-            <Card.Divider/>
+        <Card title='Coorporate Leadership'>
             <FlatList 
                 data={props.leaders}
                 renderItem={renderLeaderItem}

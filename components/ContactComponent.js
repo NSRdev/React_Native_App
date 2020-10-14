@@ -10,9 +10,7 @@ class Contact extends Component {
 
     render() {
         return(
-            <Card>
-                <Card.Title>Contact Information</Card.Title>
-                <Card.Divider/>
+            <Card title='Contact Information'>
                 <Text>121, Clear Water Bay Road</Text>
                 <Text>Clear Water Bay, Kowloon</Text>
                 <Text>HONG KONG</Text>
