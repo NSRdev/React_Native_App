@@ -5,6 +5,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
 import { Loading } from './LoadingComponent';
+import * as Animatable from 'react-native-animatable';
 
 
 const mapStateToProps = state => {
@@ -70,17 +71,21 @@ class About extends Component {
         } else if (this.props.leaders.errMess) {
             return(
                 <ScrollView>
-                    <History />
-                    <Card title='Coorporate Leadership'>
-                        <Text>{this.props.leaders.errMess}</Text>
-                    </Card>
+                    <Animatable.View animation='fadeInDown' duration={2000} delay={1000}>
+                        <History />
+                        <Card title='Coorporate Leadership'>
+                            <Text>{this.props.leaders.errMess}</Text>
+                        </Card>
+                    </Animatable.View>
                 </ScrollView>
             );
         } else {
             return(
                 <ScrollView>
-                    <History />
-                    <Leaders leaders={this.props.leaders.leaders} />
+                    <Animatable.View animation='fadeInDown' duration={2000} delay={1000}>
+                        <History />
+                        <Leaders leaders={this.props.leaders.leaders} />
+                    </Animatable.View>
                 </ScrollView>
             );
         }
