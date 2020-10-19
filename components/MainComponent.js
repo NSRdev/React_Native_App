@@ -265,7 +265,7 @@ class Main extends Component {
         return(
             <View style={{ flex: 1, paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight}}>
                 <App />
-                <StatusBar backgroundColor='#03A9F4' barStyle="light-content" />
+                <StatusBar backgroundColor='#03A9F4' style='inverted'/>
             </View>
         );
     }
