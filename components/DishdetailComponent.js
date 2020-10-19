@@ -24,12 +24,14 @@ function RenderDish(props) {
 
     handleViewRef = ref => this.view = ref;
 
-    function recognizeDrag({ moveX, moveY, dx, dy }) {
-        if (dx < -200) {
-            return true;
-        } else {
-            return false;
-        }
+    function recognizeRightToLeftDrag({ moveX, moveY, dx, dy }) {
+        if (dx < -200) return true;
+        return false;
+    }
+
+    function recognizeComment({ moveX, moveY, dx, dy }) {
+        if (dx > 200) return true;
+        return false;
     }
 
     const panResponder = PanResponder.create({
@@ -39,7 +41,7 @@ function RenderDish(props) {
         onPanResponderGrant: () => { this.view.rubberBand(1000).then(endState => console.log(endState.finished ? 'finished' : 'cancelled')); },
         onPanResponderEnd: (e, gestureState) => {
             console.log("pan responder end", gestureState);
-            if (recognizeDrag(gestureState))
+            if (recognizeRightToLeftDrag(gestureState))  {
                 Alert.alert(
                     'Add to favorite?',
                     'Are you sure you wish to add ' + dish.name + ' to your favorites?',
@@ -49,6 +51,9 @@ function RenderDish(props) {
                     ],
                     { cancelable: false }
                 );
+            } else if (recognizeComment(gestureState)) {
+                props.toggleModal();
+            }
 
             return true;
         }
@@ -147,7 +152,8 @@ class DishDetail extends Component {
                     dish={this.props.dishes.dishes[+dishId] } 
                     favorite={this.props.favorites.some(el => el === dishId)} 
                     onPress={() => this.markFavorite(dishId)}
-                    onPencilPress={() => this.toggleModal()} />
+                    onPencilPress={() => this.toggleModal()} 
+                    toggleModal={() => this.toggleModal()}/>
                 <RenderComments comments={this.props.comments.comments.filter((comment) => comment.dishId === dishId)} />
                 <Modal
                     animationType={'slide'}
