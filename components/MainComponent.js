@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { View, Platform, Image, StyleSheet, ScrollView, Text } from 'react-native';
+import { View, Platform, Image, StyleSheet, ScrollView, Text, ToastAndroid } from 'react-native';
+import NetInfo from '@react-native-community/netinfo';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createAppContainer, SafeAreaView } from 'react-navigation';
 import { createDrawerNavigator, DrawerItems } from 'react-navigation-drawer';
@@ -15,7 +16,6 @@ import Favorites from './FavoriteComponent';
 import Login from './LoginComponent';
 import { connect } from 'react-redux';
 import { fetchDishes, fetchComments, fetchPromos, fetchLeaders, postComment } from '../redux/ActionCreators';
-import { Loading } from './LoadingComponent';
 
 
 const mapStateToProps = state => {
@@ -294,6 +294,38 @@ class Main extends Component {
         this.props.fetchComments();
         this.props.fetchPromos();
         this.props.fetchLeaders();
+
+
+        NetInfo.fetch().then((connectionInfo) => {
+            ToastAndroid.show('Initial Network Connectivity Type: '
+                + connectionInfo.type, ToastAndroid.LONG);
+        });
+
+        NetInfo.addEventListener(connectionChange => this.handleConnectivityChange(connectionChange));
+    }
+
+    componentWillUnmount() {
+        NetInfo.removeEventListener(connectionChange => this.handleConnectivityChange(connectionChange));
+    }
+
+    handleConnectivityChange = (connectionInfo) => {
+        switch(connectionInfo.type) {
+            case 'none':
+                ToastAndroid.show('You are now offline', ToastAndroid.LONG);
+                break;
+            case 'wifi':
+                ToastAndroid.show('You are now connected to WIFI', ToastAndroid.LONG);
+                break;
+            case 'cellular':
+                ToastAndroid.show('You are now connected to cellular', ToastAndroid.LONG);
+                break;
+            case 'unknown':
+                ToastAndroid.show('You have an unknown connection', ToastAndroid.LONG);
+                break;
+            default:
+                break;
+        }
+
     }
 
     render() {
