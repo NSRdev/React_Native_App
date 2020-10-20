@@ -12,8 +12,10 @@ import Contact from './ContactComponent';
 import About from './AboutComponent';
 import Reservation from './ReservationComponent';
 import Favorites from './FavoriteComponent';
+import Login from './LoginComponent';
 import { connect } from 'react-redux';
 import { fetchDishes, fetchComments, fetchPromos, fetchLeaders, postComment } from '../redux/ActionCreators';
+import { Loading } from './LoadingComponent';
 
 
 const mapStateToProps = state => {
@@ -135,6 +137,23 @@ const FavoritesNavigator = createStackNavigator({
     })
 });
 
+const LoginNavigator = createStackNavigator({
+    Login: { screen: Login }
+}, {
+    defaultNavigationOptions: ({ navigation }) => ({
+        headerStyle:{
+            backgroundColor:"#03A9F4"
+        },
+        headerTintColor:"#fff",
+        headerTitleColor:{
+            color:"#fff"
+        },
+        headerLeft: () => <Icon name="menu" size={24}
+                color='white'
+                onPress={() => navigation.toggleDrawer()} />
+    })
+});
+
 const CustomDrawerContentComponent = (props) => (
     <ScrollView>
         <SafeAreaView style={StyleSheet.container} forceInset={{ top: 'always', horizontal: 'never' }}>
@@ -152,6 +171,21 @@ const CustomDrawerContentComponent = (props) => (
 );
 
 const MainNavigator = createDrawerNavigator({
+    Login: {
+        screen: LoginNavigator,
+        navigationOptions: {
+            title: 'Login',
+            drawerLabel: 'Login ',
+            drawerIcon: ({ tintColor }) => (
+                <Icon 
+                    name='sign-in'
+                    type='font-awesome'
+                    size={24}
+                    color={tintColor}
+                />
+            )
+        }
+    },
     Home: {
         screen: HomeNavigator,
         navigationOptions: {
@@ -244,6 +278,7 @@ const MainNavigator = createDrawerNavigator({
         }
     }
 }, {
+    initialRouteName: 'Home',
     drawerBackgroundColor: '#B3E5FC',
     drawerPosition: 'left',
     contentComponent: CustomDrawerContentComponent

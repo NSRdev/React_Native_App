@@ -12,6 +12,7 @@
     "@react-native-community/datetimepicker": "3.0.0",
     "@react-native-community/masked-view": "0.1.10",
     "expo": "~39.0.2",
+    "expo-secure-store": "~9.2.0",
     "expo-status-bar": "~1.0.2",
     "moment": "^2.29.1",
     "react": "16.13.1",
