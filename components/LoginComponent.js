@@ -69,7 +69,7 @@ class Login extends Component {
                     <Button
                         onPress={() => this.handleLogin()}
                         title='Login'
-                        color='#03A9F4' />
+                        color='#FFC107' />
                 </View>
             </View>
         );
