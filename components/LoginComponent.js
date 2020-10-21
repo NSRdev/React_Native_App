@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { View, StyleSheet, Text, ScrollView, Image } from 'react-native';
 import { Icon, Input, CheckBox, Button } from 'react-native-elements';
 import * as SecureStore from 'expo-secure-store';
-import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
@@ -64,13 +63,13 @@ class LoginTab extends Component {
                     leftIcon={{ type: 'font-awesome', name: 'user-o' }}
                     onChangeText={(username) => this.setState({username})}
                     value={this.state.username}
-                    containerStyle={styles.formInput} />
+                    inputContainerStyle={styles.formInput} />
                 <Input 
                     placeholder='Password'
                     leftIcon={{ type: 'font-awesome', name: 'key' }}
                     onChangeText={(password) => this.setState({password})}
                     value={this.state.password}
-                    containerStyle={styles.formInput} />
+                    inputContainerStyle={styles.formInput} />
                 <CheckBox
                     title='Remember me'
                     checked={this.state.remember}
@@ -113,11 +112,27 @@ class RegisterTab extends Component {
     }
 
     getImageFromCamera = async () => {
-        const cameraPermission = await Permissions.askAsync(Permissions.CAMERA);
-        const cameraRollPermission = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+        const cameraPermission = await ImagePicker.requestCameraPermissionsAsync();
+        const cameraRollPermission = await ImagePicker.requestCameraRollPermissionsAsync();
 
         if (cameraPermission.status === 'granted' && cameraRollPermission.status === 'granted') {
             let capturedImage = await ImagePicker.launchCameraAsync({
+                allowsEditing: true,
+                aspect: [4,3]
+            });
+
+            if (!capturedImage.cancelled) {
+                this.processImage(capturedImage.uri);
+            }
+        }
+    }
+
+    getImageFromGallery = async () => {
+        const cameraPermission = await ImagePicker.requestCameraPermissionsAsync();
+        const cameraRollPermission = await ImagePicker.requestCameraRollPermissionsAsync();
+
+        if (cameraPermission.status === 'granted' && cameraRollPermission.status === 'granted') {
+            let capturedImage = await ImagePicker.launchImageLibraryAsync({
                 allowsEditing: true,
                 aspect: [4,3]
             });
@@ -171,37 +186,40 @@ class RegisterTab extends Component {
                         <Button
                             title='Camera'
                             onPress={this.getImageFromCamera} />
+                        <Button
+                            title='Gallery'
+                            onPress={this.getImageFromGallery} />
                     </View>
                     <Input 
                         placeholder='Username'
                         leftIcon={{ type: 'font-awesome', name: 'user-o' }}
                         onChangeText={(username) => this.setState({username})}
                         value={this.state.username}
-                        containerStyle={styles.formInput} />
+                        inputContainerStyle={styles.formInput} />
                     <Input 
                         placeholder='Password'
                         leftIcon={{ type: 'font-awesome', name: 'key' }}
                         onChangeText={(password) => this.setState({password})}
                         value={this.state.password}
-                        containerStyle={styles.formInput} />
+                        inputContainerStyle={styles.formInput} />
                     <Input 
                         placeholder='First name'
                         leftIcon={{ type: 'font-awesome', name: 'user-o' }}
                         onChangeText={(firstname) => this.setState({firstname})}
                         value={this.state.firstname}
-                        containerStyle={styles.formInput} />
+                        inputContainerStyle={styles.formInput} />
                     <Input 
                         placeholder='Last name'
                         leftIcon={{ type: 'font-awesome', name: 'user-o' }}
                         onChangeText={(lastname) => this.setState({lastname})}
                         value={this.state.lastname}
-                        containerStyle={styles.formInput} />
+                        inputContainerStyle={styles.formInput} />
                     <Input 
                         placeholder='Email'
                         leftIcon={{ type: 'font-awesome', name: 'envelope-o' }}
                         onChangeText={(email) => this.setState({email})}
                         value={this.state.email}
-                        containerStyle={styles.formInput} />
+                        inputContainerStyle={styles.formInput} />
                     <CheckBox
                         title='Remember me'
                         checked={this.state.remember}

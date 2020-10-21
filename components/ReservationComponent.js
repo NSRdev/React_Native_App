@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { Text, View, ScrollView, StyleSheet, Picker, Switch, Button, Modal, Alert } from 'react-native';
-import { Card } from 'react-native-elements';
+import { Text, View, ScrollView, StyleSheet, Picker, Switch, Button, Modal, Alert, Platform } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import * as Animatable from 'react-native-animatable';
-import { Notifications } from 'expo';
+import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
+import * as Calendar from 'expo-calendar';
 
 class Reservation extends Component {
     constructor(props) {
@@ -42,7 +42,8 @@ class Reservation extends Component {
 
     async presentLocalNotification(date) {
         await this.obtainNotificationPermission();
-        Notifications.presentLocalNotificationAsync({
+
+        Notifications.presentNotificationAsync({
             title: 'Your reservation',
             body: 'Reservation for ' + date + ' requested',
             ios: {
@@ -68,11 +69,60 @@ class Reservation extends Component {
                     onPress: () => { 
                         this.resetForm(); 
                         this.presentLocalNotification(this.state.date);
+                        this.addReservationToCalendar(this.state.date);
                     } 
                 },
             ],
             { cancelable: false }
         );
+    }
+
+    async obtainCalendarPermission() {
+        let calendarPermission = await Calendar.requestCalendarPermissionsAsync();
+        if (calendarPermission.status !== 'granted') {
+            Alert.alert('Permission not granted to show the calendar');
+        }
+        return calendarPermission;
+    }
+
+    async getDefaultCalendarSource() {
+        const calendars = await Calendar.getCalendarsAsync();
+        const defaultCalendars = calendars.filter(each => each.source.name === 'Default');
+        return defaultCalendars[0].source;
+    }
+
+    async createCalendar() {
+        const defaultCalendarSource = Platform.OS === 'ios' ? await getDefaultCalendarSource() : { isLocalAccount: true, name: 'Expo Calendar' };
+        const newCalendarID = await Calendar.createCalendarAsync({
+            title: 'Expo Calendar',
+            color: 'blue',
+            entityType: Calendar.EntityTypes.EVENT,
+            sourceId: defaultCalendarSource.id,
+            source: defaultCalendarSource,
+            name: 'internalCalendarName',
+            ownerAccount: 'personal',
+            accessLevel: Calendar.CalendarAccessLevel.OWNER,
+        });
+        return newCalendarID;
+    }
+
+    async addReservationToCalendar(date) {
+        await this.obtainCalendarPermission();
+
+        const calendarId = await this.createCalendar();
+
+        let dateMs = Date.parse(date);
+        let startDate = new Date(dateMs);
+        let endDate = new Date(dateMs + 2 * 60 * 60 * 1000);
+
+        Calendar.createEventAsync(calendarId, {
+            title: 'Confusion Table Reservation',
+            startDate: startDate,
+            endDate: endDate,
+            allDay: false,
+            location: '121, Clear Water Bay Road, Clear Water Bay, Kowloon, Hong Kong',
+            timeZone: 'Asia/Hong_Kong'
+        });
     }
 
     render() {
